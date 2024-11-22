@@ -42,13 +42,13 @@ fetch("music.txt")
     });
 
 document.getElementById("start").addEventListener("click", () => {
-    const minutes = parseInt(prompt("Set timer duration in minutes (max 120):"), 10);
-    if (isNaN(minutes) || minutes <= 0 || minutes > 120) {
-        alert("Please enter a valid number between 1 and 120.");
+    const minutes = parseInt(prompt("Set timer duration in seconds (1-5400):"), 10);
+    if (isNaN(minutes) || minutes < 1 || minutes > 5400) {
+        alert("Please enter a valid number between 1 and 5400.");
         return;
     }
 
-    totalTime = minutes * 60;
+    totalTime = minutes;
     remainingTime = totalTime;
 
     clearInterval(timerInterval);
