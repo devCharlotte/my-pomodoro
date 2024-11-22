@@ -42,13 +42,21 @@ fetch("music.txt")
     });
 
 document.getElementById("start").addEventListener("click", () => {
-    const seconds = parseInt(prompt("Set timer duration in seconds (1-5400):"), 10);
-    if (isNaN(seconds) || seconds < 1 || seconds > 5400) {
-        alert("Please enter a valid number between 1 and 5400.");
+    const input = prompt("Set timer duration:\nEnter seconds (e.g., 45) or minutes (e.g., 1m, 90m):");
+
+    if (!input) {
+        alert("No input provided.");
         return;
     }
 
-    totalTime = seconds;
+    const time = parseInput(input);
+
+    if (time === null || time < 0 || time > 5400) {
+        alert("Please enter a valid time between 0 seconds and 90 minutes (5400 seconds).");
+        return;
+    }
+
+    totalTime = time;
     remainingTime = totalTime;
 
     clearInterval(timerInterval);
@@ -57,21 +65,39 @@ document.getElementById("start").addEventListener("click", () => {
 });
 
 document.getElementById("pause").addEventListener("click", () => {
+    // Stop the timer without resetting it
     clearInterval(timerInterval);
 });
 
 document.getElementById("reset").addEventListener("click", () => {
+    // Stop the timer and reset everything to initial state
     clearInterval(timerInterval);
     remainingTime = 0;
+    totalTime = 0;
     updateProgress(0);
     updateTimeDisplay(0);
 });
 
+function parseInput(input) {
+    // Parse input to handle both seconds and minutes
+    const secondsPattern = /^[0-9]+$/; // e.g., "45"
+    const minutesPattern = /^([0-9]+)m$/; // e.g., "1m", "90m"
+
+    if (secondsPattern.test(input)) {
+        const seconds = parseInt(input, 10);
+        return seconds;
+    } else if (minutesPattern.test(input)) {
+        const minutes = parseInt(input.match(minutesPattern)[1], 10);
+        return minutes * 60;
+    }
+
+    return null; // Invalid input
+}
+
 function updateTimer() {
     if (remainingTime <= 0) {
         clearInterval(timerInterval);
-        playSound(); // Play the sound first
-        alert("Time's up!"); // Then show the alert (doesn't block the sound)
+        playSoundAndShowPopup(); // Play sound and show popup
         return;
     }
 
@@ -92,12 +118,24 @@ function updateProgress(progress) {
     circle.style.strokeDashoffset = offset;
 }
 
-function playSound() {
+function playSoundAndShowPopup() {
     const sound = document.getElementById("alarm-sound").value;
-    if (!sound) {
-        console.warn("No sound selected.");
-        return;
+
+    // Play the selected sound
+    if (sound) {
+        const audio = new Audio(`music/${sound}`);
+        audio.play();
     }
-    const audio = new Audio(`music/${sound}`);
-    audio.play();
+
+    // Show a custom popup
+    const popup = document.createElement("div");
+    popup.id = "custom-popup";
+    popup.textContent = "Time's up!";
+    document.body.appendChild(popup);
+
+    // Add close button to popup
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.addEventListener("click", () => popup.remove());
+    popup.appendChild(closeButton);
 }
