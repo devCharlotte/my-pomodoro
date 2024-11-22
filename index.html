@@ -9,13 +9,12 @@
 <body>
     <div class="container">
         <h1>Pomodoro Timer</h1>
-        <div class="timer">
-            <input type="number" id="hours" min="0" max="2" placeholder="Hrs">
-            <input type="number" id="minutes" min="0" max="59" placeholder="Min">
-            <input type="number" id="seconds" min="0" max="59" placeholder="Sec">
-        </div>
-        <div class="progress-container">
-            <div id="progress-bar"></div>
+        <div class="timer-circle">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" class="base-circle"></circle>
+                <circle cx="100" cy="100" r="90" class="progress-circle" id="progress-circle"></circle>
+            </svg>
+            <div class="time-display" id="time-display">00:00</div>
         </div>
         <div class="controls">
             <button id="start">Start</button>
@@ -24,7 +23,9 @@
         </div>
         <div class="sound-select">
             <label for="alarm-sound">Select Alarm Sound:</label>
-            <select id="alarm-sound"></select>
+            <select id="alarm-sound">
+                <option value="">-- Select Sound --</option>
+            </select>
         </div>
     </div>
     <script src="script.js"></script>
