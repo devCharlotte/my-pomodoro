@@ -4,6 +4,32 @@
     font-weight: normal;
     font-style: normal;
 }
+svg {
+    transform: rotate(-90deg);
+    width: 100%; /* 화면 크기에 따라 조정 */
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%; /* 모바일 화면에 맞게 폭 조정 */
+    }
+
+    .timer-circle {
+        width: 150px; /* SVG 크기 줄임 */
+        height: 150px;
+    }
+
+    .time-display {
+        font-size: 18px; /* 텍스트 크기 축소 */
+    }
+
+    .controls button {
+        font-size: 14px; /* 버튼 텍스트 크기 축소 */
+    }
+}
+
+
 
 body {
     font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
