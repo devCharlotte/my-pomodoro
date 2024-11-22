@@ -1,5 +1,12 @@
+@font-face {
+    font-family: 'HakgyoansimGeurimilgiTTF-R';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimGeurimilgiTTF-R.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
     text-align: center;
     background-color: #f4f4f9;
     margin: 0;
@@ -20,6 +27,7 @@ body {
 
 h1 {
     color: #333;
+    font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
 }
 
 .timer input {
@@ -41,6 +49,7 @@ h1 {
     background-color: #007bff;
     color: white;
     cursor: pointer;
+    font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
 }
 
 .controls button:hover {
@@ -54,4 +63,5 @@ h1 {
 .sound-select select {
     padding: 5px;
     font-size: 16px;
+    font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
 }
