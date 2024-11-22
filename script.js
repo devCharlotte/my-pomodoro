@@ -65,12 +65,10 @@ document.getElementById("start").addEventListener("click", () => {
 });
 
 document.getElementById("pause").addEventListener("click", () => {
-    // Stop the timer without resetting it
     clearInterval(timerInterval);
 });
 
 document.getElementById("reset").addEventListener("click", () => {
-    // Stop the timer and reset everything to initial state
     clearInterval(timerInterval);
     remainingTime = 0;
     totalTime = 0;
@@ -79,25 +77,22 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 function parseInput(input) {
-    // Parse input to handle both seconds and minutes
-    const secondsPattern = /^[0-9]+$/; // e.g., "45"
-    const minutesPattern = /^([0-9]+)m$/; // e.g., "1m", "90m"
+    const secondsPattern = /^[0-9]+$/;
+    const minutesPattern = /^([0-9]+)m$/;
 
     if (secondsPattern.test(input)) {
-        const seconds = parseInt(input, 10);
-        return seconds;
+        return parseInt(input, 10);
     } else if (minutesPattern.test(input)) {
-        const minutes = parseInt(input.match(minutesPattern)[1], 10);
-        return minutes * 60;
+        return parseInt(input.match(minutesPattern)[1], 10) * 60;
     }
 
-    return null; // Invalid input
+    return null;
 }
 
 function updateTimer() {
     if (remainingTime <= 0) {
         clearInterval(timerInterval);
-        playSoundAndShowPopup(); // Play sound and show popup
+        playSoundAndShowPopup();
         return;
     }
 
@@ -114,26 +109,23 @@ function updateTimeDisplay(seconds) {
 
 function updateProgress(progress) {
     const circle = document.getElementById("progress-circle");
-    const offset = 565 * (1 - progress); // Calculate stroke-dashoffset
+    const offset = 565 * (1 - progress);
     circle.style.strokeDashoffset = offset;
 }
 
 function playSoundAndShowPopup() {
     const sound = document.getElementById("alarm-sound").value;
 
-    // Play the selected sound
     if (sound) {
         const audio = new Audio(`music/${sound}`);
         audio.play();
     }
 
-    // Show a custom popup
     const popup = document.createElement("div");
     popup.id = "custom-popup";
     popup.textContent = "Time's up!";
     document.body.appendChild(popup);
 
-    // Add close button to popup
     const closeButton = document.createElement("button");
     closeButton.textContent = "Close";
     closeButton.addEventListener("click", () => popup.remove());
