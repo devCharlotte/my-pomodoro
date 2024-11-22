@@ -42,13 +42,13 @@ fetch("music.txt")
     });
 
 document.getElementById("start").addEventListener("click", () => {
-    const minutes = parseInt(prompt("Set timer duration in seconds (1-5400):"), 10);
-    if (isNaN(minutes) || minutes < 1 || minutes > 5400) {
+    const seconds = parseInt(prompt("Set timer duration in seconds (1-5400):"), 10);
+    if (isNaN(seconds) || seconds < 1 || seconds > 5400) {
         alert("Please enter a valid number between 1 and 5400.");
         return;
     }
 
-    totalTime = minutes;
+    totalTime = seconds;
     remainingTime = totalTime;
 
     clearInterval(timerInterval);
@@ -70,8 +70,8 @@ document.getElementById("reset").addEventListener("click", () => {
 function updateTimer() {
     if (remainingTime <= 0) {
         clearInterval(timerInterval);
-        playSound();
-        alert("Time's up!");
+        playSound(); // Play the sound first
+        alert("Time's up!"); // Then show the alert (doesn't block the sound)
         return;
     }
 
@@ -95,7 +95,7 @@ function updateProgress(progress) {
 function playSound() {
     const sound = document.getElementById("alarm-sound").value;
     if (!sound) {
-        alert("Please select an alarm sound!");
+        console.warn("No sound selected.");
         return;
     }
     const audio = new Audio(`music/${sound}`);
