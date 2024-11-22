@@ -3,38 +3,57 @@ let remainingTime = 0;
 let totalTime = 0;
 
 // Fetch the music information from music.txt
-fetch("music/music.txt")
-    .then((response) => response.text())
+fetch("music.txt")
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch music list.");
+        }
+        return response.text();
+    })
     .then((data) => {
         const alarmSoundSelect = document.getElementById("alarm-sound");
+        alarmSoundSelect.innerHTML = ""; // Clear placeholder options
         const lines = data.split("\n").filter((line) => line.trim() !== "");
 
-        // Populate the dropdown with the music information
-        lines.forEach((line) => {
-            const [filename, description] = line.split(" - ");
+        if (lines.length === 0) {
             const option = document.createElement("option");
-            option.value = filename.trim();
-            option.textContent = description.trim();
+            option.textContent = "No music available";
+            option.disabled = true;
             alarmSoundSelect.appendChild(option);
-        });
+        } else {
+            // Populate the dropdown with the music information
+            lines.forEach((line) => {
+                const [filename, description] = line.split(" - ");
+                const option = document.createElement("option");
+                option.value = filename.trim();
+                option.textContent = description.trim();
+                alarmSoundSelect.appendChild(option);
+            });
+        }
     })
-    .catch((error) => console.error("Error loading music information:", error));
+    .catch((error) => {
+        console.error("Error loading music information:", error);
+        const alarmSoundSelect = document.getElementById("alarm-sound");
+        alarmSoundSelect.innerHTML = ""; // Clear placeholder options
+        const option = document.createElement("option");
+        option.textContent = "Error loading music";
+        option.disabled = true;
+        alarmSoundSelect.appendChild(option);
+    });
 
 document.getElementById("start").addEventListener("click", () => {
-    const hours = parseInt(document.getElementById("hours").value) || 0;
-    const minutes = parseInt(document.getElementById("minutes").value) || 0;
-    const seconds = parseInt(document.getElementById("seconds").value) || 0;
-
-    totalTime = hours * 3600 + minutes * 60 + seconds;
-    remainingTime = totalTime;
-
-    if (remainingTime <= 0) {
-        alert("Please set a valid time.");
+    const minutes = parseInt(prompt("Set timer duration in minutes (max 120):"), 10);
+    if (isNaN(minutes) || minutes <= 0 || minutes > 120) {
+        alert("Please enter a valid number between 1 and 120.");
         return;
     }
 
+    totalTime = minutes * 60;
+    remainingTime = totalTime;
+
     clearInterval(timerInterval);
     timerInterval = setInterval(updateTimer, 1000);
+    updateProgress(1);
 });
 
 document.getElementById("pause").addEventListener("click", () => {
@@ -44,8 +63,8 @@ document.getElementById("pause").addEventListener("click", () => {
 document.getElementById("reset").addEventListener("click", () => {
     clearInterval(timerInterval);
     remainingTime = 0;
-    updateProgressBar(0);
-    updateDisplay(0, 0, 0);
+    updateProgress(0);
+    updateTimeDisplay(0);
 });
 
 function updateTimer() {
@@ -57,24 +76,20 @@ function updateTimer() {
     }
 
     remainingTime--;
-
-    const hours = Math.floor(remainingTime / 3600);
-    const minutes = Math.floor((remainingTime % 3600) / 60);
-    const seconds = remainingTime % 60;
-
-    updateProgressBar((remainingTime / totalTime) * 100);
-    updateDisplay(hours, minutes, seconds);
+    updateProgress(remainingTime / totalTime);
+    updateTimeDisplay(remainingTime);
 }
 
-function updateDisplay(hours, minutes, seconds) {
-    document.getElementById("hours").value = hours;
-    document.getElementById("minutes").value = minutes;
-    document.getElementById("seconds").value = seconds;
+function updateTimeDisplay(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    document.getElementById("time-display").textContent = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
-function updateProgressBar(percentage) {
-    const progressBar = document.getElementById("progress-bar");
-    progressBar.style.width = `${percentage}%`;
+function updateProgress(progress) {
+    const circle = document.getElementById("progress-circle");
+    const offset = 565 * (1 - progress); // Calculate stroke-dashoffset
+    circle.style.strokeDashoffset = offset;
 }
 
 function playSound() {
