@@ -27,7 +27,6 @@ body {
 
 h1 {
     color: #333;
-    font-family: 'HakgyoansimGeurimilgiTTF-R', Arial, sans-serif;
 }
 
 .timer input {
@@ -38,6 +37,22 @@ h1 {
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    margin: 20px 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.5s ease-in-out;
 }
 
 .controls button {
