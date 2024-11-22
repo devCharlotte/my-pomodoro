@@ -1,5 +1,6 @@
 let timerInterval;
 let remainingTime = 0;
+let totalTime = 0;
 
 // Fetch the music information from music.txt
 fetch("music/music.txt")
@@ -24,7 +25,8 @@ document.getElementById("start").addEventListener("click", () => {
     const minutes = parseInt(document.getElementById("minutes").value) || 0;
     const seconds = parseInt(document.getElementById("seconds").value) || 0;
 
-    remainingTime = hours * 3600 + minutes * 60 + seconds;
+    totalTime = hours * 3600 + minutes * 60 + seconds;
+    remainingTime = totalTime;
 
     if (remainingTime <= 0) {
         alert("Please set a valid time.");
@@ -42,6 +44,7 @@ document.getElementById("pause").addEventListener("click", () => {
 document.getElementById("reset").addEventListener("click", () => {
     clearInterval(timerInterval);
     remainingTime = 0;
+    updateProgressBar(0);
     updateDisplay(0, 0, 0);
 });
 
@@ -59,6 +62,7 @@ function updateTimer() {
     const minutes = Math.floor((remainingTime % 3600) / 60);
     const seconds = remainingTime % 60;
 
+    updateProgressBar((remainingTime / totalTime) * 100);
     updateDisplay(hours, minutes, seconds);
 }
 
@@ -68,8 +72,17 @@ function updateDisplay(hours, minutes, seconds) {
     document.getElementById("seconds").value = seconds;
 }
 
+function updateProgressBar(percentage) {
+    const progressBar = document.getElementById("progress-bar");
+    progressBar.style.width = `${percentage}%`;
+}
+
 function playSound() {
     const sound = document.getElementById("alarm-sound").value;
+    if (!sound) {
+        alert("Please select an alarm sound!");
+        return;
+    }
     const audio = new Audio(`music/${sound}`);
     audio.play();
 }
